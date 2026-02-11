@@ -19,4 +19,6 @@ RUN npm run build
 EXPOSE 3333
 
 # Comando que inicia o servidor
-CMD ["node", "dist/server.js"]
+#CMD ["node", "dist/server.js"]
+# Roda em modo desenvolvimento (sem depender do dist)
+CMD ["npm", "run", "dev"]

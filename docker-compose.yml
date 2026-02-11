@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: anna
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_DB: partituras
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./back
+    container_name: node_backend
+    restart: always
+    ports:
+      - "3333:3333"
+    environment:
+      DATABASE_URL: postgresql://anna:123456@db:5432/partituras
+    depends_on:
+      - db
+    volumes:
+      - ./back:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./front/my-app
+    container_name: react_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+
+volumes:
+  postgres_data:
