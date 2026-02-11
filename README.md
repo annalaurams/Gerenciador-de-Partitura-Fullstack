@@ -13,6 +13,7 @@ O Gerenciador de Partituras é uma aplicação web full stack criada para organi
 <img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/>
 
 </div>
+
 ## Sumário
 
 - [Funcionalidades](#funcionalidades)
