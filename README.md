@@ -2,6 +2,17 @@
 
 O Gerenciador de Partituras é uma aplicação web full stack criada para organizar, armazenar e gerenciar partituras musicais.
 
+<div align="center">
+<img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black"/>
+<img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white"/>
+<img src="https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white"/>
+<img src="https://img.shields.io/badge/Express-000000?style=flat&logo=express&logoColor=white"/>
+<img src="https://img.shields.io/badge/Prisma-2D3748?style=flat&logo=prisma&logoColor=white"/>
+<img src="https://img.shields.io/badge/PostgreSQL-336791?style=flat&logo=postgresql&logoColor=white"/>
+<img src="https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white"/>
+<img src="https://img.shields.io/badge/Axios-5A29E4?style=flat&logo=axios&logoColor=white"/>
+
+</div>
 ## Sumário
 
 - [Funcionalidades](#funcionalidades)
@@ -95,80 +106,54 @@ CREATE DATABASE gerenciador_partituras;
 
 1. Navegue até a pasta do backend:
 ```bash
-cd back
-```
 
-2. Instale as dependências:
+### Rodando com Docker
+
+O projeto está totalmente preparado para rodar com Docker e Docker Compose, facilitando o setup e garantindo que todas as dependências estejam corretas.
+
+#### Pré-requisitos
+
+- Docker
+- Docker Compose
+
+#### Passos
+
+1. Clone o repositório e navegue até a raiz do projeto.
+2. Execute:
+  ```bash
+  sudo docker compose up --build
+  ```
+  Isso irá:
+  - Subir o banco de dados PostgreSQL (porta 5433 no host)
+  - Subir o backend (porta 3333)
+  - Subir o frontend (porta 80)
+
+3. Acesse:
+  - Frontend: [http://localhost](http://localhost)
+  - Backend: [http://localhost:3333](http://localhost:3333)
+
+#### Sobre as portas
+- **Frontend:** Porta 80 (Nginx serve o build do React)
+- **Backend:** Porta 3333 (Express/Node)
+- **Banco:** Porta 5433 (host) mapeada para 5432 (container)
+
+#### Migrations
+As migrations do Prisma são aplicadas automaticamente no banco do container. Caso precise rodar manualmente:
 ```bash
-npm install
+sudo docker compose exec backend npx prisma migrate deploy
 ```
+Isso garante que as tabelas sejam criadas no banco correto.
 
-3. Crie o arquivo `.env` na raiz da pasta `back`:
-```env
-DATABASE_URL="postgresql://usuario:senha@localhost:5432/partituras"
-JWT_SECRET="sua-chave-secreta-aqui"
-API_URL="http://localhost:3333"
-PORT=3333
-```
+#### Arquivos Docker
+- **docker-compose.yml:** Orquestra todos os serviços (db, backend, frontend), define volumes, portas e dependências.
+- **back/Dockerfile:** Define o ambiente do backend, instala dependências, roda migrations e inicia o servidor.
+- **front/my-app/Dockerfile:** Builda o React e serve via Nginx.
+- **front/my-app/nginx.conf:** Configuração do Nginx para SPA, redireciona todas as rotas para index.html.
 
-4. Execute as migrations do Prisma:
-```bash
-npx prisma migrate dev
-```
+#### SPA e Nginx
+O arquivo `nginx.conf` garante que todas as rotas do React sejam tratadas pelo próprio app, evitando erro 404 em rotas como `/register`.
 
-5. Inicie o servidor de desenvolvimento:
-```bash
-npm run dev
-```
-
-O backend estará rodando em `http://localhost:3333`
-
-### Configurando o Frontend
-
-1. Em outro terminal, navegue até a pasta do frontend:
-```bash
-cd front/my-app
-```
-
-2. Instale as dependências:
-```bash
-npm install
-```
-
-3. Crie o arquivo `.env` na raiz da pasta `my-app`:
-```env
-REACT_APP_API_URL=http://localhost:3333
-```
-
-4. Inicie o servidor de desenvolvimento:
-```bash
-npm start
-```
-
-O frontend estará rodando em `http://localhost:3000`
-
-
-## Variáveis de Ambiente
-
-### Backend
-
-| Variável | Descrição |
-|----------|-----------|
-| `DATABASE_URL` | String de conexão com o PostgreSQL |
-| `JWT_SECRET` | Chave secreta para assinatura do token JWT |
-| `API_URL` | URL base da API (ex: http://localhost:3333) |
-| `PORT` | Porta onde o servidor irá rodar (padrão: 3333) |
-
-### Frontend
-
-| Variável | Descrição |
-|----------|-----------|
-| `REACT_APP_API_URL` | URL base da API para requisições do frontend |
-
-## Rotas da API
-
-### Autenticação
-
+---
 | Método | Rota | Descrição |
 |--------|------|-----------|
 | POST | `/auth/register` | Cadastro de novo usuário |
